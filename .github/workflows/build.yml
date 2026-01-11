@@ -63,5 +63,5 @@ jobs:
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: numnumvum-nice_nano-v1
+          name: numnumvum-nice_nano
           path: zmk/build/zephyr/zmk.uf2

@@ -10,10 +10,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # Step 1: Checkout the configuration repository
+      - name: Checkout config repository
         uses: actions/checkout@v4
+        with:
+          path: config
 
-      - name: Build ZMK firmware
+      # Step 2: Checkout the ZMK repository
+      - name: Checkout ZMK repository
+        uses: actions/checkout@v4
+        with:
+          repository: zmkfirmware/zmk
+          ref: main
+          path: zmk
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            git cmake ninja-build gperf \
+            python3-pip python3-setuptools python3-wheel \
+            wget xz-utils file make gcc gcc-multilib
+
+      # Step 4: Install and set up West
+      - name: Install west
+        run: |
+          pip3 install --user west
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      # Step 5: Initialize and update the workspace
+      - name: Init west
+        run: |
+          cd zmk
+          west init -l app
+          west update
+          west zephyr-export
+
+      # Step 6: Build the firmware
+      - name: Build firmware
         run: |
           cd zmk
           west build \
@@ -23,3 +58,10 @@ jobs:
             -- \
             -DZMK_CONFIG=$GITHUB_WORKSPACE/config \
             -DSHIELD=numnumvum
+
+      # Step 7: Upload the firmware artifact
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: numnumvum-nice_nano-v1
+          path: zmk/build/zephyr/zmk.uf2

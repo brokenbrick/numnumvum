@@ -1,6 +1,6 @@
 if SHIELD_NUMNUMVUM
 
 config ZMK_KEYBOARD_NAME
-    default "numnumvum 6x4 keypad"
+    default "numnumvum"
 
 endif

@@ -1,3 +1,0 @@
-config SHIELD_NUMNUMVUM
-    bool "numnumvum 6x4 keypad"
-    depends on ZMK_KEYBOARD

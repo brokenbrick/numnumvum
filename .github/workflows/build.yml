@@ -3,25 +3,56 @@ name: Build ZMK firmware
 on:
   push:
   pull_request:
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout config
+      - name: Checkout config repo
         uses: actions/checkout@v4
-
-      - name: Build ZMK firmware
-        uses: zmkfirmware/zmk-build-action@v1.0.2
         with:
-          board: nice_nano
-          shield: numnumvum
+          path: config
+
+      - name: Checkout ZMK
+        uses: actions/checkout@v4
+        with:
+          repository: zmkfirmware/zmk
+          ref: main
+          path: zmk
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            git cmake ninja-build gperf \
+            python3-pip python3-setuptools python3-wheel \
+            wget xz-utils file make gcc gcc-multilib
+
+      - name: Install west
+        run: |
+          pip3 install --user west
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Init west
+        run: |
+          cd zmk
+          west init -l app
+          west update
+          west zephyr-export
+
+      - name: Build firmware
+        run: |
+          west build \
+            -s zmk/app \
+            -b nice_nano \
+            -d build \
+            -- \
+            -DZMK_CONFIG=$GITHUB_WORKSPACE/config \
+            -DSHIELD=numnumvum
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: numnumvum-nice_nano
-          path: |
-            build/zephyr/zmk.uf2
+          path: build/zephyr/zmk.uf2

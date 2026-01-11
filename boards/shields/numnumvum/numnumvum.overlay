@@ -1,3 +1,6 @@
+#include <zmk/matrix_transform.dtsi>
+
+
 / {
     chosen {
         zmk,kscan = &kscan;

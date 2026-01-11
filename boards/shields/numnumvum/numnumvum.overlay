@@ -1,5 +1,6 @@
 #include <zmk/matrix_transform.dtsi>
-
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/zmk/matrix_transform.h>
 
 / {
     chosen {
@@ -11,15 +12,17 @@
         compatible = "zmk,kscan-gpio-matrix";
         diode-direction = "col2row";
 
+        /* ROWS: 6 */
         row-gpios = <
             &gpio0 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
             &gpio0 9  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
-            &gpio0 8  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
+            &gpio0 6  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
             &gpio0 4  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
             &gpio0 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
             &gpio0 0  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)
         >;
 
+        /* COLS: 4 */
         col-gpios = <
             &gpio0 17 GPIO_ACTIVE_HIGH
             &gpio0 20 GPIO_ACTIVE_HIGH

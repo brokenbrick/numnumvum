@@ -1,5 +1,25 @@
-on: [push, pull_request, workflow_dispatch]
+name: Build ZMK firmware
+
+on: 
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build ZMK firmware
+        run: |
+          cd zmk
+          west build \
+            -s app \
+            -b nice_nano \
+            -d build \
+            -- \
+            -DZMK_CONFIG=$GITHUB_WORKSPACE/config \
+            -DSHIELD=numnumvum

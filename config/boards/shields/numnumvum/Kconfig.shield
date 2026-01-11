@@ -1,2 +1,3 @@
 config SHIELD_NUMNUMVUM
-    def_bool $(shields_list_contains,numnumvum)
+    bool "NumNumVum keyboard"
+    depends on BOARD_NICE_NANO

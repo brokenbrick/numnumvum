@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout config repo
+      - name: Checkout config repository
         uses: actions/checkout@v4
         with:
           path: config
 
-      - name: Checkout ZMK
+      - name: Checkout ZMK repository
         uses: actions/checkout@v4
         with:
           repository: zmkfirmware/zmk
@@ -34,7 +34,7 @@ jobs:
           pip3 install --user west
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Init west
+      - name: Initialize west workspace
         run: |
           cd zmk
           west init -l app
@@ -43,16 +43,17 @@ jobs:
 
       - name: Build firmware
         run: |
+          cd zmk
           west build \
-            -s zmk/app \
+            -s app \
             -b nice_nano \
             -d build \
             -- \
             -DZMK_CONFIG=$GITHUB_WORKSPACE/config \
             -DSHIELD=numnumvum
 
-      - name: Upload firmware
+      - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
-          name: numnumvum-nice_nano
-          path: build/zephyr/zmk.uf2
+          name: numnumvum-nice_nano-v1
+          path: zmk/build/zephyr/zmk.uf2

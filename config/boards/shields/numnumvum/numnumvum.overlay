@@ -7,8 +7,8 @@
     };
 
     kscan: kscan {
-        compatible = "zmk,kscan-gpio-matrix";
-        label = "KSCAN";
+        compatible = "zmk,numnumvum";
+        label = "NUMNUMVUM";
         diode-direction = "col2row";
 
         row-gpios = <&pro_micro 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
